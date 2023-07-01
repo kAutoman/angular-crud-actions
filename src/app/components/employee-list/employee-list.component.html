@@ -1,0 +1,259 @@
+<div class="container px-0">
+  <span class="d-flex justify-content-end" style="width: 100%;">
+    <button type="button" class="btn btn-success btn-sm" onclick="$('#exampleModal').modal('show')">Add Guests</button>
+  </span>
+  <!-- No data message -->
+  <p *ngIf="Employee.length <= 0" class="no-data text-center my-2">
+    There is no employee added yet!
+  </p>
+
+  <!-- Employee list -->
+  <table class="table table-bordered my-2" *ngIf="Employee.length > 0">
+    <thead class="table-success">
+      <tr>
+        <th scope="col">First Name</th>
+        <th scope="col">Last Name</th>
+        <th scope="col">Email</th>
+        <th scope="col">Date of Birth</th>
+        <th scope="col">Allergies</th>
+        <th scope="col center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of Employee; let i = index">
+        <td>{{ employee.firstName }}</td>
+        <td>{{ employee.lastName }}</td>
+        <td>{{ employee.email }}</td>
+        <td>{{ employee.birthday }}</td>
+        <td>{{ employee.allergies }}</td>
+        <td class="text-center edit-block">
+          <span class="edit" onclick="$('#editModal').modal('show');" (click)="getEmployee(employee.id)">
+            <button type="button" class="btn btn-warning btn-sm">Edit</button>
+          </span>
+          <span class="delete" (click)="removeEmployee(employee, i)">
+            <button type="button" class="btn btn-danger btn-sm mx-1">Delete</button>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade static " data-backdrop="static" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Guest</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="inputName">First Name</label>
+            <input class="form-control" type="text" formControlName="firstName" />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['firstName'].errors?.['required']"
+            >
+              First Name is required
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputName">Last Name</label>
+            <input class="form-control" type="text" formControlName="lastName" />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['lastName'].errors?.['required']"
+            >
+              Last Name is required
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="inputEmail3">Email</label>
+            <input class="form-control" type="text" formControlName="email" />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['email'].errors?.['required']"
+            >
+              Enter your email.
+            </div>
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['email'].errors?.['pattern']"
+            >
+              Enter valid email.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputVerify3">Date of Birth</label>
+            <input
+              class="form-control"
+              type="date"
+              formControlName="birthday"
+            />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['birthday'].errors?.['required']"
+            >
+              Enter birthday.
+            </div>
+            
+          </div>
+
+          <div class="form-group">
+            <label for="inputVerify3">Allergies</label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="allergies"
+            />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['allergies'].errors?.['required']"
+            >
+              Enter allergies.
+            </div>
+          </div>
+  
+          <!-- <div class="form-group">
+            <label for="inputPassword3">Allergies</label>
+            <select
+              class="custom-select form-control"
+              (change)="updateProfile($event.target.value)"
+              formControlName="designation"
+            >
+              <option value="">Choose...</option>
+              <option
+                *ngFor="let employeeProfile of EmployeeProfile"
+                value="{{ employeeProfile }}"
+              >
+                {{ employeeProfile }}
+              </option>
+            </select>
+            
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['designation'].errors?.['required']"
+            >
+              Choose designation.
+            </div>
+          </div> -->
+
+  
+          <div class="form-group">
+            <button class="btn btn-success btn-lg btn-block" type="submit">
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade static " data-backdrop="static" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Guest</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
+          <div class="form-group">
+            <label for="inputName">First Name</label>
+            <input class="form-control" type="text" formControlName="firstName" />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['firstName'].errors?.['required']"
+            >
+              First Name is required
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="inputName">Last Name</label>
+            <input class="form-control" type="text" formControlName="lastName" />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['lastName'].errors?.['required']"
+            >
+              Last Name is required
+            </div>
+          </div>
+  
+          <div class="form-group">
+            <label for="inputEmail3">Email</label>
+            <input class="form-control" type="text" formControlName="email" />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['email'].errors?.['required']"
+            >
+              Enter your email.
+            </div>
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['email'].errors?.['pattern']"
+            >
+              Enter valid email.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label for="inputVerify3">Date of Birth</label>
+            <input
+              class="form-control"
+              type="date"
+              formControlName="birthday"
+            />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['birthday'].errors?.['required']"
+            >
+              Enter birthday.
+            </div>
+            
+          </div>
+
+          <div class="form-group">
+            <label for="inputVerify3">Allergies</label>
+            <input
+              class="form-control"
+              type="text"
+              formControlName="allergies"
+            />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['allergies'].errors?.['required']"
+            >
+              Enter allergies.
+            </div>
+          </div>
+
+          <div class="form-group">
+            <button class="btn btn-success btn-lg btn-block" type="submit">
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
