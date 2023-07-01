@@ -4,6 +4,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { EmployeeListComponent } from './components/employee-list/employee-list.component';
+import { EventListComponent } from './components/event-list/event-list.component';
 
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
@@ -12,6 +13,7 @@ import { HttpClientModule } from '@angular/common/http';
   declarations: [
     AppComponent,
     EmployeeListComponent,
+    EventListComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,193 @@
+<div class="container px-0">
+  <span class="d-flex justify-content-end" style="width: 100%;">
+    <button type="button" class="btn btn-success btn-sm" onclick="$('#exampleModal').modal('show')">Add Events</button>
+  </span>
+  <!-- No data message -->
+  <p *ngIf="Employee.length <= 0" class="no-data text-center my-2">
+    There is no employee added yet!
+  </p>
+
+  <!-- Employee list -->
+  <table class="table table-bordered my-2" *ngIf="Employee.length > 0">
+    <thead class="table-success">
+      <tr>
+        <th scope="col">name</th>
+        <th scope="col">date</th>
+        <th scope="col center">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let employee of Employee; let i = index">
+        <td>{{ employee.name }}</td>
+        <td>{{ employee.date }}</td>
+        <td class="text-center edit-block">
+          <span class="edit" onclick="$('#editModal').modal('show');" (click)="getEvent(employee.id)">
+            <button type="button" class="btn btn-warning btn-sm">Edit</button>
+          </span>
+          <span class="delete" (click)="removeEvent(employee, i)">
+            <button type="button" class="btn btn-danger btn-sm mx-1">Delete</button>
+          </span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- Modal -->
+<div class="modal fade static " data-backdrop="static" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Add Event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="employeeForm" (ngSubmit)="onSubmit()">
+          <div class="form-group">
+            <label for="inputName">Name</label>
+            <input class="form-control" type="text" formControlName="name" />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['name']?.errors?.['required']"
+            >
+              Name is required
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="inputVerify3">Date</label>
+            <input
+              class="form-control"
+              type="date"
+              formControlName="date"
+            />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['date']?.errors?.['required']"
+            >
+              Enter date.
+            </div>
+            
+          </div>
+
+
+          
+          <div class="form-group">
+            <label for="inputPassword3">Guests</label>
+            <select
+              class="custom-select form-control"
+              (change)="updateProfile($event.target.value)"
+              formControlName="guests"
+              multiple
+            >
+              <option value="">Choose...</option>
+              <option
+                *ngFor="let guest of Guests"
+                value="{{ guest.id }}"
+              >
+                {{ guest.firstName }}
+              </option>
+            </select>
+            
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && myForm['guests']?.errors?.['required']"
+            >
+              Choose Guests.
+            </div>
+          </div>
+
+  
+          <div class="form-group">
+            <button class="btn btn-success btn-lg btn-block" type="submit">
+              Register
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade static " data-backdrop="static" id="editModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="false">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Edit Event</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form [formGroup]="editForm" (ngSubmit)="onEditSubmit()">
+          <div class="form-group">
+            <label for="inputName">Name</label>
+            <input class="form-control" type="text" formControlName="name" />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && editForm['name']?.errors?.['required']"
+            >
+              Name is required
+            </div>
+          </div>
+          
+
+          <div class="form-group">
+            <label for="inputVerify3">Date</label>
+            <input
+              class="form-control"
+              type="date"
+              formControlName="date"
+            />
+            <!-- error -->
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && editForm['date']?.errors?.['required']"
+            >
+              Enter date.
+            </div>
+            
+          </div>
+
+          <div class="form-group">
+            <label for="inputPassword3">Guests</label>
+            <select
+              class="custom-select form-control"
+              (change)="updateProfile($event.target.value)"
+              formControlName="guests"
+              multiple
+            >
+              <option value="">Choose...</option>
+              <option
+                *ngFor="let guest of Guests"
+                value="{{ guest.id }}"
+              >
+                {{ guest.firstName }}
+              </option>
+            </select>
+            
+            <div
+              class="invalid-feedback d-block"
+              *ngIf="submitted && editForm['guests']?.errors?.['required']"
+            >
+              Choose guests.
+            </div>
+          </div>
+
+
+          <div class="form-group">
+            <button class="btn btn-success btn-lg btn-block" type="submit">
+              Update
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

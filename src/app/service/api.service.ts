@@ -22,14 +22,34 @@ export class ApiService {
     return this.http.post(url, data).pipe(catchError(this.errorMgmt));
   }
 
+  // Create
+  createEvent(data): Observable<any> {
+    let url = `${this.baseUri}Event`;
+    return this.http.post(url, data).pipe(catchError(this.errorMgmt));
+  }
+
   // Get all employees
   getEmployees() {
     return this.http.get(`${this.baseUri}Guest`);
+  }
+  // Get all employees
+  getEvents() {
+    return this.http.get(`${this.baseUri}Event`);
   }
 
   // Get employee
   getEmployee(id): Observable<any> {
     let url = `${this.baseUri}Guest/${id}`;
+    return this.http.get(url, { headers: this.headers }).pipe(
+      map((res: Response) => {
+        return res || {};
+      }),
+      catchError(this.errorMgmt)
+    );
+  }
+  // Get employee
+  getEvent(id): Observable<any> {
+    let url = `${this.baseUri}Event/${id}`;
     return this.http.get(url, { headers: this.headers }).pipe(
       map((res: Response) => {
         return res || {};
@@ -45,10 +65,25 @@ export class ApiService {
       .put(url, data, { headers: this.headers })
       .pipe(catchError(this.errorMgmt));
   }
+  // Update event
+  updateEvent(id, data): Observable<any> {
+    let url = `${this.baseUri}Event/${id}`;
+    return this.http
+      .put(url, data, { headers: this.headers })
+      .pipe(catchError(this.errorMgmt));
+  }
 
   // Delete employee
   deleteEmployee(id): Observable<any> {
     let url = `${this.baseUri}Guest/${id}`;
+    return this.http
+      .delete(url, { headers: this.headers })
+      .pipe(catchError(this.errorMgmt));
+  }
+
+  // Delete employee
+  deleteEvent(id): Observable<any> {
+    let url = `${this.baseUri}Event/${id}`;
     return this.http
       .delete(url, { headers: this.headers })
       .pipe(catchError(this.errorMgmt));
